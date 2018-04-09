@@ -33,6 +33,17 @@ func main() {
 			Value:       "http://localhost:9090",
 			Destination: &flag.Prometheus,
 		},
+		cli.Int64Flag{
+			Name:        "start_time",
+			Usage:       "Start time in epoch",
+			Destination: &flag.Start,
+		},
+		cli.Int64Flag{
+			Name:        "end_time",
+			Usage:       "End time in epoch",
+			Destination: &flag.End,
+		},
+
 	}
 
 	app.Commands = []cli.Command{{
@@ -90,6 +101,8 @@ type flags struct {
 	Duration   time.Duration
 	Header     bool
 	Prometheus string
+	Start	   int64
+	End	   int64
 }
 
 var flag flags
@@ -98,9 +111,15 @@ func exportAction(c *cli.Context) error {
 	if !c.Args().Present() {
 		return fmt.Errorf(color.RedString("need a query to run"))
 	}
-
-	end := time.Now()
-	start := end.Add(-1 * flag.Duration)
+	var start time.Time
+	var end time.Time
+	if (flag.Start > 0 ){
+	   start = time.Unix(flag.Start, 0)
+	   end = time.Unix(flag.End, 0)
+	}else{
+		end = time.Now()
+		start = end.Add(-1 * flag.Duration)
+	}
 
 	results, err := Query(flag.Prometheus, start, end, c.Args().First())
 	if err != nil {
