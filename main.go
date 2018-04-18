@@ -17,6 +17,12 @@ func main() {
 
 	app.Action = exportAction
 	app.Flags = []cli.Flag{
+		cli.IntFlag{
+			Name:        "step,s",
+			Usage:       "Step size in result data, in seconds",
+			Value:       0,
+			Destination: &flag.Step,
+		},
 		cli.DurationFlag{
 			Name:        "duration,d",
 			Usage:       "The duration to get timeseries from",
@@ -103,6 +109,8 @@ type flags struct {
 	Prometheus string
 	Start	   int64
 	End	   int64
+	Step       int
+
 }
 
 var flag flags
@@ -121,7 +129,7 @@ func exportAction(c *cli.Context) error {
 		start = end.Add(-1 * flag.Duration)
 	}
 
-	results, err := Query(flag.Prometheus, start, end, c.Args().First())
+	results, err := Query(flag.Prometheus, start, end, c.Args().First(), flag.Step)
 	if err != nil {
 		return err
 	}
