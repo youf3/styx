@@ -1,11 +1,11 @@
 # styx
 
-Export Prometheus data as CSV or directly plot with gnuplot & matplotlib.
+Export Prometheus data as CSV or directly plot with gnuplot & matplotlib. This work is originated from go-pluto/styx with a small feature addition: specify steps (data interval).
 
 ## Installation
 
 ```
-go get -v -u github.com/go-pluto/styx
+go get -v -u github.com/youf/styx
 ```
 
 If you want to simply export data from Prometheus as CSV then you don't need to install any thing else.
